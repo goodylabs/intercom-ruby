@@ -19,6 +19,7 @@ module Intercom
     end
 
     def self.get(path, params)
+      puts "\n\nDEBUG GET REQUEST: #{path} #{params}\n\n"
       new(path, Net::HTTP::Get.new(append_query_string_to_url(path, params), default_headers))
     end
 
@@ -38,6 +39,7 @@ module Intercom
       request = http_method.send(:new, path, default_headers)
       request.body = params.to_json
       request["Content-Type"] = "application/json"
+      puts "\n\nDEBUG POST REQUEST: #{path} params: #{params} body: #{request.body}\n\n"
       request
     end
 
@@ -67,6 +69,7 @@ module Intercom
             response = http.request(net_http_method)
             set_rate_limit_details(response)
             decoded_body = decode_body(response)
+            puts "\n\nDEBUG RESPONSE:: #{decoded_body}\n\n"
             parsed_body = parse_body(decoded_body, response)
             raise_errors_on_failure(response)
             parsed_body
